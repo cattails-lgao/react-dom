@@ -7,16 +7,19 @@ import Logo from "./images/logo.svg";
 
 const rules = {
 	username: [
-		{
-			required: true,
-			message: "Please input your Username!",
-		},
+		{ required: true, whitespace: true, message: "用户名必须输入" },
+		{ max: 12, min: 4, message: "用户名长度必须大于4小于12" },
+		{ pattern: /^\w+$/, message: '用户名必须是字母、数字、下划线组成' }
 	],
 	password: [
 		{
-			required: true,
-			message: "Please input your Password!",
-		},
+			validator: (rule, value) => {
+				if(!value) return Promise.reject('密码必须输入');
+				if(value.length <= 4 || value.length >= 12) return Promise.reject('密码长度必须大于4小于12')
+				if(!(/^\w+$/).test(value)) return Promise.reject('密码必须是字母、数字、下划线组成');
+				return Promise.resolve();
+			}
+		}
 	],
 };
 
@@ -24,9 +27,13 @@ const rules = {
  * 登录路由组件
  */
 export default class Login extends Component {
-	onFinish = (e) => {
+	onFinish = e => {
 		console.log(e);
-	};
+	}
+
+	onFinishFailed = ({ values, errorFields, outOfDate }) => {
+		console.log(values, errorFields, outOfDate);
+	}
 
 	render() {
 		return (
@@ -42,19 +49,20 @@ export default class Login extends Component {
 							name="normal_login"
 							className="login-form"
 							onFinish={this.onFinish}
+							onFinishFailed={this.onFinishFailed}
 						>
 							<Form.Item name="username" rules={rules.username}>
 								<Input
 									prefix={<UserOutlined className="site-form-item-icon" />}
-									placeholder="Username"
+									autoComplete="off"
+									placeholder="用户名"
 								/>
 							</Form.Item>
 							<Form.Item name="password" rules={rules.password}>
-								<Input
+								<Input.Password
 									prefix={<LockOutlined className="site-form-item-icon" />}
-									type="password"
 									autoComplete="off"
-									placeholder="Password"
+									placeholder="密码"
 								/>
 							</Form.Item>
 
