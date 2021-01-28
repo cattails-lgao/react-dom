@@ -48,6 +48,9 @@ export default class Login extends Component {
 						<Form
 							name="normal_login"
 							className="login-form"
+							initialValues={{
+								username: 'admin'
+							}}
 							onFinish={this.onFinish}
 							onFinishFailed={this.onFinishFailed}
 						>
