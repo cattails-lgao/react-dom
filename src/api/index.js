@@ -3,13 +3,7 @@ import config from './config';
 
 export const axiosLogin = (username, password) => {
     const { url, methods } = config.login;
-
-    return axios({ 
-        url, 
-        methods, 
-        data: {
-            username,
-            password
-        } 
-    });
+    const data = { username, password };
+    
+    return axios({ url, methods, data });
 }
